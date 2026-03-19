@@ -68,11 +68,14 @@ services:
       minio:
         condition: service_healthy
     environment:
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
-      DATABASE_NAME: norvoter
-      DATABASE_USER: postgres2
-      DATABASE_PASSWORD: 1qaz
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: norvoter
+      DB_USER: postgres2
+      DB_PASSWORD: 1qaz
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      MINIO_BUCKET: meters
 
 volumes:
   postgres_data:
