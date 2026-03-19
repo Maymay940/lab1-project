@@ -49,7 +49,10 @@ class WaterMeter(models.Model):
         "Дата последних показаний", null=True, blank=True, db_column="last_reading_date"
     )
     next_verification_date = models.DateField(
-        "Дата следующей поверки", null=True, blank=True, db_column="next_verification_date"
+        "Дата следующей поверки",
+        null=True,
+        blank=True,
+        db_column="next_verification_date",
     )
     photo_url = models.URLField("Фото", blank=True, null=True, db_column="photo_url")
     setup_video_url = models.URLField("Видео", blank=True, null=True, db_column="setup_video_url")
@@ -90,7 +93,11 @@ class Request(models.Model):
         User, on_delete=models.RESTRICT, related_name="requests", db_column="user_id"
     )
     status = models.CharField(
-        "Статус", max_length=20, choices=STATUS_CHOICES, default=DRAFT, db_column="status"
+        "Статус",
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=DRAFT,
+        db_column="status",
     )
     created_at = models.DateTimeField("Дата создания", auto_now_add=True, db_column="created_at")
     submitted_at = models.DateTimeField(
@@ -132,10 +139,16 @@ class Request(models.Model):
 
 class ReadingPosition(models.Model):
     request = models.ForeignKey(
-        Request, on_delete=models.RESTRICT, related_name="positions", db_column="request_id"
+        Request,
+        on_delete=models.RESTRICT,
+        related_name="positions",
+        db_column="request_id",
     )
     water_meter = models.ForeignKey(
-        WaterMeter, on_delete=models.RESTRICT, related_name="readings", db_column="water_meter_id"
+        WaterMeter,
+        on_delete=models.RESTRICT,
+        related_name="readings",
+        db_column="water_meter_id",
     )
     current_reading = models.IntegerField("Текущие показания", db_column="current_reading")
     consumption = models.IntegerField("Расход", db_column="consumption")

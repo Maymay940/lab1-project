@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Norvoter - Мои счетчики воды</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
-    
+
     {% load static %}
     <link rel="stylesheet" href="{% static 'meters/css/style.css' %}">
 </head>
@@ -28,7 +28,7 @@
                         <img src="{% static 'meters/imagers/logo.png' %}" alt="Norvoter" class="logo__image">
                         <span class="logo__text">Norvoter</span>
                     </a>
-                    
+
                     <nav class="header__nav">
                         <a href="/" class="nav__link nav__link--active">счетчики</a>
                         <a href="{% url 'request_list' %}" class="nav__link">заявки</a>
@@ -47,10 +47,10 @@
                 <div class="search-section search-section-transparent">
                     <form method="GET" action="{% url 'meter_list' %}" class="search-form"> <!--контейнер для отправки данных-->
                         <div class="search-field search-field-light">
-                            <input 
-                                type="text" 
-                                name="search"  
-                                class="search-input search-input-light" 
+                            <input
+                                type="text"
+                                name="search"
+                                class="search-input search-input-light"
                                 placeholder="Найти по адресу..."
                                 value="{{ search_query }}"
                             >

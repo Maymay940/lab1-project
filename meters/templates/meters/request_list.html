@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Norvoter - Все заявки</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
-    
+
     {% load static %}
     <link rel="stylesheet" href="{% static 'meters/css/style.css' %}">
 </head>
@@ -19,7 +19,7 @@
                         <img src="{% static 'meters/imagers/logo.png' %}" alt="Norvoter" class="logo__image">
                         <span class="logo__text">Norvoter</span>
                     </a>
-                    
+
                     <nav class="header__nav">
                         <a href="/" class="nav__link">счетчики</a>
                         <a href="{% url 'request_list' %}" class="nav__link nav__link--active">заявки</a>
@@ -48,7 +48,7 @@
                                     {% endif %}
                                 </span>
                             </div>
-                            
+
                             <div class="request-card-body">
                                 <div class="info-row">
                                     <span class="info-label">Дата:</span>
@@ -58,7 +58,7 @@
                                     <span class="info-label">Счетчиков:</span>
                                     <span class="info-value">{{ request.positions_count }}</span>
                                 </div>
-                                
+
                                 {% if request.total_consumption %}
                                 <div class="info-row highlight">
                                     <span class="info-label">Сумма:</span>
@@ -66,7 +66,7 @@
                                 </div>
                                 {% endif %}
                             </div>
-                            
+
                             <div class="request-card-footer">
                                 <span class="btn btn-primary btn-compact">подробнее</span>
                             </div>

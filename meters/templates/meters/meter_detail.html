@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Norvoter - Мои счетчики воды</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
-    
+
     {% load static %}
     <link rel="stylesheet" href="{% static 'meters/css/style.css' %}">
 </head>
@@ -19,7 +19,7 @@
                         <img src="{% static 'meters/imagers/logo.png' %}" alt="Norvoter" class="logo__image">
                         <span class="logo__text">Norvoter</span>
                     </a>
-                    
+
                     <nav class="header__nav">
                         <a href="/" class="nav__link">счетчики</a>
                         <a href="/requests/" class="nav__link">заявки</a>
@@ -43,7 +43,7 @@
                         {% else %}
                             <img src="{% static 'images/no-image.jpg' %}" alt="Нет фото" class="meter-photo">
                         {% endif %}
-                        
+
                         {% if meter.setup_video_url %}
                         <div class="video-section">
                             <video class="meter-video" autoplay muted loop playsinline>
@@ -53,7 +53,7 @@
                         </div>
                         {% endif %}
                     </div>
-                    
+
                     <div class="card__content-col">
                         <div class="info-block">
                             <div class="info-line">
@@ -84,22 +84,22 @@
                         <form action="{% url 'add_reading' %}" method="POST" class="reading-form">
                             {% csrf_token %}
                             <input type="hidden" name="meter_id" value="{{ meter.id }}">
-                            
+
                             <div class="reading-section">
                                 <div class="reading-input-col">
                                     <label for="current_reading" class="reading-label">Текущие показания:</label>
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         id="current_reading"
-                                        name="current_reading" 
-                                        class="reading-input" 
+                                        name="current_reading"
+                                        class="reading-input"
                                         placeholder="Введите показания"
                                         min="{{ meter.last_verified_reading }}"
                                         max="999999999"
                                         required
                                     >
                                 </div>
-                                
+
                                 <div class="reading-stats-col">
                                     <div class="previous-reading">
                                         <span class="stats-label">Предыдущие показания:</span>

@@ -61,8 +61,8 @@ a {
     width: 100vw;
     height: 100vh;
     z-index: -1;
-    background: linear-gradient(135deg, 
-        rgba(14, 87, 231, 0.1) 0%, 
+    background: linear-gradient(135deg,
+        rgba(14, 87, 231, 0.1) 0%,
         rgba(0, 0, 0, 0.2) 50%,
         rgba(14, 87, 231, 0.1) 100%);
     pointer-events: none;
@@ -91,8 +91,8 @@ a {
 .logo__image {
     width: 50px;
     height: 50px;
-    border-radius: 8px; 
-    object-fit: cover; 
+    border-radius: 8px;
+    object-fit: cover;
 }
 
 .logo__text {
@@ -693,33 +693,33 @@ a {
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
     }
-    
+
     .meter-card {
         flex-direction: column;
     }
-    
+
     .card__image-col {
         width: 100%;
         max-width: 280px;
         margin: 0 auto;
     }
-    
+
     .card__content-col {
         width: 100%;
     }
-    
+
     .page-title {
         font-size: 36px;
     }
-    
+
     .nav__link {
         font-size: 22px;
     }
-    
+
     .logo__text {
         font-size: 28px;
     }
-    
+
     .empty-state {
         grid-column: span 2;
     }
@@ -731,39 +731,39 @@ a {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
-    
+
     .request-info {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .request-meter-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
-    
+
     .meter-address {
         min-width: auto;
         width: 100%;
     }
-    
+
     .meter-readings {
         width: 100%;
         justify-content: space-between;
         gap: 8px;
     }
-    
+
     .reading-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 2px;
     }
-    
+
     .request-actions {
         flex-direction: column;
     }
-    
+
     .btn-secondary, .btn-primary, .btn-success {
         width: 100%;
     }
@@ -775,43 +775,43 @@ a {
         grid-template-columns: 1fr;
         gap: 12px;
     }
-    
+
     .header__inner {
         flex-direction: column;
         gap: 12px;
     }
-    
+
     .info-line {
         flex-direction: column;
         gap: 2px;
     }
-    
+
     .info-label {
         width: auto;
     }
-    
+
     .reading-section {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .reading-input-col,
     .reading-stats-col {
         width: 100%;
     }
-    
+
     .stats-value {
         font-size: 24px;
     }
-    
+
     .btn {
         width: 100%;
     }
-    
+
     .compact-days {
         font-size: 20px;
     }
-    
+
     .empty-state {
         grid-column: span 1;
     }

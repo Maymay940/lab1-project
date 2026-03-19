@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Norvoter - Заявка №{{ request_obj.id }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
-    
+
     {% load static %}
     <link rel="stylesheet" href="{% static 'meters/css/style.css' %}">
 </head>
@@ -19,7 +19,7 @@
                         <img src="{% static 'meters/imagers/logo.png' %}" alt="Norvoter" class="logo__image">
                         <span class="logo__text">Norvoter</span>
                     </a>
-                    
+
                     <nav class="header__nav">
                         <a href="/" class="nav__link">счетчики</a>
                         <a href="{% url 'request_list' %}" class="nav__link nav__link--active">заявки</a>
@@ -49,14 +49,14 @@
                             <span class="info-label">Дата создания:</span>
                             <span class="info-value">{{ request_obj.created_at|date:"d.m.Y H:i" }}</span>
                         </div>
-                        
+
                        <!-- {% if request_obj.submitted_at %}
                         <div class="info-row">
                             <span class="info-label">Дата отправки:</span>
                             <span class="info-value">{{ request_obj.submitted_at|date:"d.m.Y H:i" }}</span>
                         </div>
                         {% endif %}-->
-                        
+
                         {% if request_obj.completed_at %}
                         <div class="info-row">
                             <span class="info-label">Дата завершения:</span>
@@ -71,7 +71,7 @@
                         {% for position in positions %}
                         <div class="request-meter-item">
                             <div class="meter-address">
-                                {{ position.water_meter.address }} | 
+                                {{ position.water_meter.address }} |
                                 {% if position.water_meter.meter_type == 'HOT' %}ГВС{% else %}ХВС{% endif %}
                             </div>
                             <div class="meter-readings">
@@ -81,7 +81,7 @@
                                 </span>
                                 <span class="reading-item">
                                     <span class="reading-label">Текущие:</span>
-                                    <span class="reading-value">{{ position.current_reading }}</span>                  
+                                    <span class="reading-value">{{ position.current_reading }}</span>
                                 </span>
                                 <span class="reading-item">
                                     <span class="reading-label">Расход:</span>
@@ -124,20 +124,20 @@
                             </form>
                             <a href="/" class="btn btn-primary">добавить счетчик</a>
                             <a href="{% url 'submit_request' request_obj.id %}" class="btn btn-success">подать показания</a>
-                        
+
                         {% elif request_obj.status == 'submitted' %}
                             <div class="status-message info">
                                 Заявка отправлена.
                             </div>
-                        
+
                         {% elif request_obj.status == 'completed' %}
                             <div class="status-message success">
                                 Заявка завершена.
-                            </div>                       
+                            </div>
                                                                                       <!--пу пу пу а надо ли в моем случае-->
                         {% elif request_obj.status == 'rejected' %}
                             <div class="status-message error">
-                                Заявка отклонена. 
+                                Заявка отклонена.
                             </div>
                         {% endif %}
                     </div>

@@ -1,7 +1,8 @@
-from .models import WaterMeter, Request, ReadingPosition, User
-from django.shortcuts import render, get_object_or_404, redirect
 from django.db import connection
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+
+from .models import ReadingPosition, Request, User, WaterMeter
 
 
 # получение текущего пользователя (для заявок, потом понадобится)
@@ -42,7 +43,6 @@ def meter_detail(request, meter_id):  # get /meters/<id>/ детальная с�
 
 
 def request_list(request):
-
     current_user = get_current_user()
 
     requests_list = (
