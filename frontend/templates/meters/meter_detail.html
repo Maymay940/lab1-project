@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Norvoter - Детали счетчика</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/meters/css/style.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="container">
+                <div class="header__inner">
+                    <a href="/" class="header__logo">
+                        <img src="/static/meters/imagers/logo.png" alt="Norvoter" class="logo__image">
+                        <span class="logo__text">Norvoter</span>
+                    </a>
+                    <nav class="header__nav">
+                        <a href="/" class="nav__link">счетчики</a>
+                        <a href="/requests.html" class="nav__link">заявки</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title" id="meter-address">Загрузка...</h1>
+                </div>
+
+                <div class="meter-card">
+                    <div class="card__image-col">
+                        <img id="meter-photo" src="" alt="Фото счетчика" class="meter-photo">
+                        <div class="video-section" id="video-section" style="display: none;">
+                            <video id="meter-video" class="meter-video" autoplay muted loop playsinline>
+                                <source id="video-source" src="" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+
+                    <div class="card__content-col">
+                        <div class="info-block">
+                            <div class="info-line">
+                                <span class="info-label">Модель:</span>
+                                <span class="info-value" id="meter-model">---</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Тип:</span>
+                                <span class="info-value" id="meter-type">---</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Дата установки:</span>
+                                <span class="info-value" id="meter-install-date">---</span>
+                            </div>
+                            <div class="info-line">
+                                <span class="info-label">Последние показания:</span>
+                                <span class="info-value" id="meter-last-reading">---</span>
+                            </div>
+                        </div>
+
+                        <form id="reading-form" class="reading-form" method="POST">
+                            <input type="hidden" name="meter_id" id="meter-id">
+
+                            <div class="reading-section">
+                                <div class="reading-input-col">
+                                    <label for="current_reading" class="reading-label">Текущие показания:</label>
+                                    <input type="number" id="current_reading" name="current_reading" class="reading-input" placeholder="Введите показания" required>
+                                </div>
+
+                                <div class="reading-stats-col">
+                                    <div class="previous-reading">
+                                        <span class="stats-label">Предыдущие показания:</span>
+                                        <span class="previous-value" id="previous-reading">---</span>
+                                    </div>
+                                    <div class="calculated-consumption" id="consumption-display">
+                                        <span class="stats-label">Расход в этом месяце:</span>
+                                        <span class="stats-value" id="consumption-value">-- м³</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card__actions">
+                                <button type="submit" class="btn btn-primary">передать показания</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Получаем ID счетчика из URL (?id=123)
+        const urlParams = new URLSearchParams(window.location.search);
+        const meterId = urlParams.get('id');
+
+        let lastReading = 0;
+
+        // Загрузка данных счетчика
+        fetch(`/api/meters/${meterId}/`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('meter-address').textContent = data.address;
+                document.getElementById('meter-model').textContent = `${data.meter_model} (№${data.serial_number})`;
+                document.getElementById('meter-type').textContent = data.meter_type === 'HOT' ? 'Горячая вода' : 'Холодная вода';
+                document.getElementById('meter-install-date').textContent = data.installation_date;
+                document.getElementById('meter-last-reading').textContent = `${data.last_verified_reading} м³ (подтверждено)`;
+                document.getElementById('previous-reading').textContent = `${data.last_verified_reading} м³`;
+                document.getElementById('meter-id').value = data.id;
+                lastReading = data.last_verified_reading;
+
+                // Устанавливаем минимальное значение
+                const input = document.getElementById('current_reading');
+                input.min = lastReading;
+
+                // Фото
+                if (data.photo_url) {
+                    document.getElementById('meter-photo').src = data.photo_url;
+                }
+
+                // Видео
+                if (data.setup_video_url) {
+                    document.getElementById('video-section').style.display = 'block';
+                    document.getElementById('video-source').src = data.setup_video_url;
+                    document.getElementById('meter-video').load();
+                }
+            });
+
+        // Расчет расхода при вводе
+        const input = document.getElementById('current_reading');
+        const consumptionSpan = document.getElementById('consumption-value');
+
+        input.addEventListener('input', function() {
+            const currentValue = parseInt(this.value);
+            if (!isNaN(currentValue) && currentValue >= lastReading) {
+                const consumption = currentValue - lastReading;
+                consumptionSpan.textContent = consumption + ' м³';
+            } else {
+                consumptionSpan.textContent = '-- м³';
+            }
+        });
+
+        // Отправка формы
+        document.getElementById('reading-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const currentReading = document.getElementById('current_reading').value;
+            
+            const response = await fetch('/api/add-reading/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    meter_id: meterId,
+                    current_reading: currentReading
+                })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                window.location.href = `/request_detail.html?id=${data.request_id}`;
+            } else {
+                alert('Ошибка при передаче показаний');
+            }
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>

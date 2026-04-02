@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Norvoter - Мои счетчики воды</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/meters/css/style.css">
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay muted loop playsinline class="background-video">
+            <source src="http://localhost:9000/meters/video/video_water.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <div class="app">
+        <header class="header header-transparent">
+            <div class="container">
+                <div class="header__inner">
+                    <a href="/" class="header__logo">
+                        <img src="/static/meters/imagers/logo.png" alt="Norvoter" class="logo__image">
+                        <span class="logo__text">Norvoter</span>
+                    </a>
+                    <nav class="header__nav">
+                        <a href="/" class="nav__link nav__link--active">счетчики</a>
+                        <a href="/requests.html" class="nav__link">заявки</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title page-title-light">Счетчики</h1>
+                </div>
+
+                <div class="search-section search-section-transparent">
+                    <div class="search-field search-field-light">
+                        <input type="text" id="search-input" class="search-input search-input-light" placeholder="Найти по адресу...">
+                        <button id="search-button" class="search-button search-button-light">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                                <path d="M16 16L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="meters-grid" class="cards-grid">
+                    <!-- Карточки будут загружены через JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let allMeters = [];
+
+        function loadMeters(searchQuery = '') {
+            fetch('/api/meters/')
+                .then(response => response.json())
+                .then(data => {
+                    allMeters = data;
+                    let filtered = allMeters;
+                    if (searchQuery) {
+                        filtered = allMeters.filter(m => 
+                            m.address.toLowerCase().includes(searchQuery.toLowerCase())
+                        );
+                    }
+                    
+                    const container = document.getElementById('meters-grid');
+                    if (filtered.length === 0) {
+                        container.innerHTML = '<div class="empty-state empty-state-light"><p>Счетчики не найдены</p><a href="/" class="btn btn-primary">обратно к списку</a></div>';
+                        return;
+                    }
+                    
+                    container.innerHTML = filtered.map(meter => `
+                        <div class="meter-card-compact meter-card-glass">
+                            <h3 class="compact-title">${meter.meter_model} № ${meter.serial_number}</h3>
+                            <p class="compact-address">${meter.address}</p>
+                            <p class="compact-type">Тип: ${meter.meter_type === 'HOT' ? 'ГВС' : 'ХВС'}</p>
+                            <div class="compact-footer">
+                                <span class="compact-days">${meter.last_verified_reading}</span>
+                                <span class="compact-label">последние показания</span>
+                            </div>
+                            <a href="/meter_detail.html?id=${meter.id}" class="btn btn-primary btn-compact">подробнее</a>
+                        </div>
+                    `).join('');
+                });
+        }
+
+        loadMeters();
+
+        document.getElementById('search-button').addEventListener('click', () => {
+            const query = document.getElementById('search-input').value;
+            loadMeters(query);
+        });
+
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = e.target.value;
+                loadMeters(query);
+            }
+        });
+    </script>
+</body>
+</html>

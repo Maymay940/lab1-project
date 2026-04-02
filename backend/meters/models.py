@@ -6,11 +6,17 @@ class User(models.Model):
         "Имя пользователя", max_length=100, unique=True, db_column="username"
     )
     email = models.EmailField("Email", unique=True, db_column="email")
-    first_name = models.CharField("Имя", max_length=100, blank=True, db_column="first_name")
-    last_name = models.CharField("Фамилия", max_length=100, blank=True, db_column="last_name")
+    first_name = models.CharField(
+        "Имя", max_length=100, blank=True, db_column="first_name"
+    )
+    last_name = models.CharField(
+        "Фамилия", max_length=100, blank=True, db_column="last_name"
+    )
     phone = models.CharField("Телефон", max_length=20, blank=True, db_column="phone")
     is_active = models.BooleanField("Активен", default=True, db_column="is_active")
-    created_at = models.DateTimeField("Дата регистрации", auto_now_add=True, db_column="created_at")
+    created_at = models.DateTimeField(
+        "Дата регистрации", auto_now_add=True, db_column="created_at"
+    )
 
     def __str__(self):
         return f"{self.username} ({self.first_name} {self.last_name})"
@@ -36,9 +42,13 @@ class WaterMeter(models.Model):
     serial_number = models.CharField(
         "Заводской номер", max_length=50, unique=True, db_column="serial_number"
     )
-    meter_type = models.CharField("Тип", max_length=10, choices=METER_TYPES, db_column="meter_type")
+    meter_type = models.CharField(
+        "Тип", max_length=10, choices=METER_TYPES, db_column="meter_type"
+    )
     meter_model = models.CharField("Модель", max_length=100, db_column="meter_model")
-    installation_date = models.DateField("Дата установки", db_column="installation_date")
+    installation_date = models.DateField(
+        "Дата установки", db_column="installation_date"
+    )
     initial_reading = models.IntegerField(
         "Начальные показания", default=0, db_column="initial_reading"
     )
@@ -55,10 +65,16 @@ class WaterMeter(models.Model):
         db_column="next_verification_date",
     )
     photo_url = models.URLField("Фото", blank=True, null=True, db_column="photo_url")
-    setup_video_url = models.URLField("Видео", blank=True, null=True, db_column="setup_video_url")
+    setup_video_url = models.URLField(
+        "Видео", blank=True, null=True, db_column="setup_video_url"
+    )
     is_active = models.BooleanField("Активен", default=True, db_column="is_active")
-    created_at = models.DateTimeField("Дата добавления", auto_now_add=True, db_column="created_at")
-    updated_at = models.DateTimeField("Дата обновления", auto_now=True, db_column="updated_at")
+    created_at = models.DateTimeField(
+        "Дата добавления", auto_now_add=True, db_column="created_at"
+    )
+    updated_at = models.DateTimeField(
+        "Дата обновления", auto_now=True, db_column="updated_at"
+    )
 
     def __str__(self):
         type_display = "ГВС" if self.meter_type == "HOT" else "ХВС"
@@ -99,7 +115,9 @@ class Request(models.Model):
         default=DRAFT,
         db_column="status",
     )
-    created_at = models.DateTimeField("Дата создания", auto_now_add=True, db_column="created_at")
+    created_at = models.DateTimeField(
+        "Дата создания", auto_now_add=True, db_column="created_at"
+    )
     submitted_at = models.DateTimeField(
         "Дата отправки", null=True, blank=True, db_column="submitted_at"
     )
@@ -150,12 +168,16 @@ class ReadingPosition(models.Model):
         related_name="readings",
         db_column="water_meter_id",
     )
-    current_reading = models.IntegerField("Текущие показания", db_column="current_reading")
+    current_reading = models.IntegerField(
+        "Текущие показания", db_column="current_reading"
+    )
     consumption = models.IntegerField("Расход", db_column="consumption")
     reading_photo_url = models.URLField(
         "Фото показаний", blank=True, null=True, db_column="reading_photo_url"
     )
-    created_at = models.DateTimeField("Дата добавления", auto_now_add=True, db_column="created_at")
+    created_at = models.DateTimeField(
+        "Дата добавления", auto_now_add=True, db_column="created_at"
+    )
 
     def __str__(self):
         return f"{self.water_meter.address} - {self.current_reading} м³"

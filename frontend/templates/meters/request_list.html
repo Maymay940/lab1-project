@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Norvoter - Все заявки</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/meters/css/style.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="container">
+                <div class="header__inner">
+                    <a href="/" class="header__logo">
+                        <img src="/static/meters/imagers/logo.png" alt="Norvoter" class="logo__image">
+                        <span class="logo__text">Norvoter</span>
+                    </a>
+                    <nav class="header__nav">
+                        <a href="/" class="nav__link">счетчики</a>
+                        <a href="/requests.html" class="nav__link nav__link--active">заявки</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Все заявки</h1>
+                </div>
+
+                <div id="requests-grid" class="requests-grid">
+                    <!-- заявки загрузятся через JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        fetch('/api/requests/')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('requests-grid');
+                if (data.requests.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><p>У вас пока нет заявок</p><a href="/" class="btn btn-primary">перейти к счетчикам</a></div>';
+                    return;
+                }
+
+                const statusMap = {
+                    'draft': 'Черновик',
+                    'submitted': 'Отправлено',
+                    'completed': 'Завершено',
+                    'rejected': 'Отклонено'
+                };
+
+                container.innerHTML = data.requests.map(req => `
+                    <a href="/request_detail.html?id=${req.id}" class="request-card-link">
+                        <div class="request-card-compact">
+                            <div class="request-card-header">
+                                <span class="request-id">Заявка №${req.id}</span>
+                                <span class="request-status-badge status-${req.status}">${statusMap[req.status] || req.status}</span>
+                            </div>
+                            <div class="request-card-body">
+                                <div class="info-row">
+                                    <span class="info-label">Дата:</span>
+                                    <span class="info-value">${req.created_at}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Счетчиков:</span>
+                                    <span class="info-value">${req.positions_count}</span>
+                                </div>
+                                ${req.total_consumption ? `
+                                <div class="info-row highlight">
+                                    <span class="info-label">Сумма:</span>
+                                    <span class="info-value">${req.amount_to_pay} ₽</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                            <div class="request-card-footer">
+                                <span class="btn btn-primary btn-compact">подробнее</span>
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+            });
+    </script>
+</body>
+</html>

@@ -49,17 +49,10 @@ services:
       timeout: 20s
       retries: 3
 
-  django:
-    image: python:3.11
-    container_name: norvoter_django
+  backend:
+    build: .
+    container_name: norvoter_backend
     restart: unless-stopped
-    command: >
-      sh -c "pip install -r requirements.txt &&
-             python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - .:/app
-    working_dir: /app
     ports:
       - "8000:8000"
     depends_on:
@@ -76,6 +69,19 @@ services:
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin123
       MINIO_BUCKET: meters
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: sh -c "ls -la /app && pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
+
+  frontend:
+    build: ../frontend
+    container_name: norvoter_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:

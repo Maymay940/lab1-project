@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Norvoter - Детали заявки</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/meters/css/style.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="container">
+                <div class="header__inner">
+                    <a href="/" class="header__logo">
+                        <img src="/static/meters/imagers/logo.png" alt="Norvoter" class="logo__image">
+                        <span class="logo__text">Norvoter</span>
+                    </a>
+                    <nav class="header__nav">
+                        <a href="/" class="nav__link">счетчики</a>
+                        <a href="/requests.html" class="nav__link nav__link--active">заявки</a>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title" id="request-title">Загрузка...</h1>
+                    <span class="request-status-badge" id="request-status">---</span>
+                </div>
+
+                <div class="request-view-card">
+                    <div class="request-info">
+                        <div class="info-row">
+                            <span class="info-label">Дата создания:</span>
+                            <span class="info-value" id="request-created">---</span>
+                        </div>
+                        <div class="info-row" id="request-completed-row" style="display: none;">
+                            <span class="info-label">Дата завершения:</span>
+                            <span class="info-value" id="request-completed">---</span>
+                        </div>
+                    </div>
+
+                    <h2 class="section-title">Показания счетчиков</h2>
+                    <div id="positions-list" class="request-meters-list">
+                        <!-- позиции загрузятся через JS -->
+                    </div>
+
+                    <div id="totals-section" class="request-totals" style="display: none;">
+                        <div class="total-row">
+                            <span class="total-label">Общий расход:</span>
+                            <span class="total-value" id="total-consumption">---</span>
+                        </div>
+                        <div class="total-row highlight-row">
+                            <span class="total-label">Сумма к оплате:</span>
+                            <span class="total-value large" id="amount-to-pay">---</span>
+                        </div>
+                    </div>
+
+                    <div id="request-actions" class="request-actions">
+                        <!-- кнопки загрузятся через JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const requestId = urlParams.get('id');
+
+        function loadRequest() {
+            fetch(`/api/requests/${requestId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('request-title').textContent = `Заявка №${data.id}`;
+                    
+                    const statusMap = {
+                        'draft': 'Черновик',
+                        'submitted': 'Отправлено',
+                        'completed': 'Завершено',
+                        'rejected': 'Отклонено',
+                        'deleted': 'Удалено'
+                    };
+                    document.getElementById('request-status').textContent = statusMap[data.status] || data.status;
+                    document.getElementById('request-status').className = `request-status-badge status-${data.status}`;
+                    document.getElementById('request-created').textContent = data.created_at;
+
+                    if (data.completed_at) {
+                        document.getElementById('request-completed-row').style.display = 'flex';
+                        document.getElementById('request-completed').textContent = data.completed_at;
+                    }
+
+                    // Позиции
+                    const positionsContainer = document.getElementById('positions-list');
+                    if (data.positions.length === 0) {
+                        positionsContainer.innerHTML = '<div class="empty-state"><a href="/" class="btn btn-primary">добавить счетчик</a></div>';
+                    } else {
+                        positionsContainer.innerHTML = data.positions.map(pos => `
+                            <div class="request-meter-item">
+                                <div class="meter-address">
+                                    ${pos.water_meter__address} | ${pos.water_meter__meter_type === 'HOT' ? 'ГВС' : 'ХВС'}
+                                </div>
+                                <div class="meter-readings">
+                                    <span class="reading-item">
+                                        <span class="reading-label">Предыдущие:</span>
+                                        <span class="reading-value">${pos.water_meter__last_verified_reading}</span>
+                                    </span>
+                                    <span class="reading-item">
+                                        <span class="reading-label">Текущие:</span>
+                                        <span class="reading-value">${pos.current_reading}</span>
+                                    </span>
+                                    <span class="reading-item">
+                                        <span class="reading-label">Расход:</span>
+                                        <span class="reading-value highlight">${pos.consumption} м³</span>
+                                    </span>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+
+                    // Итоги
+                    if (data.total_consumption && data.amount_to_pay) {
+                        document.getElementById('totals-section').style.display = 'block';
+                        document.getElementById('total-consumption').textContent = `${data.total_consumption} м³`;
+                        document.getElementById('amount-to-pay').textContent = `${data.amount_to_pay} ₽`;
+                    }
+
+                    // Кнопки действий
+                    const actionsContainer = document.getElementById('request-actions');
+                    if (data.status === 'draft') {
+                        actionsContainer.innerHTML = `
+                            <form action="/api/delete-request/${requestId}/" method="POST" style="display: inline;">
+                                <input type="hidden" name="csrfmiddlewaretoken" value="${getCookie('csrftoken')}">
+                                <button type="submit" class="btn btn-secondary" onclick="return confirm('Удалить черновик заявки?')">удалить черновик</button>
+                            </form>
+                            <a href="/" class="btn btn-primary">добавить счетчик</a>
+                            <button id="submit-btn" class="btn btn-success">подать показания</button>
+                        `;
+                        document.getElementById('submit-btn').addEventListener('click', () => {
+                            fetch(`/api/submit-request/${requestId}/`, { method: 'POST', headers: {'X-CSRFToken': getCookie('csrftoken')} })
+                                .then(() => location.reload());
+                        });
+                    } else if (data.status === 'submitted') {
+                        actionsContainer.innerHTML = '<div class="status-message info">Заявка отправлена.</div>';
+                    } else if (data.status === 'completed') {
+                        actionsContainer.innerHTML = '<div class="status-message success">Заявка завершена.</div>';
+                    } else if (data.status === 'rejected') {
+                        actionsContainer.innerHTML = '<div class="status-message error">Заявка отклонена.</div>';
+                    }
+                });
+        }
+
+        loadRequest();
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>
