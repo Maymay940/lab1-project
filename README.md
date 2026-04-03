@@ -59,7 +59,7 @@ lab1-project/
   ```bash
    cd backend
 
-3. **Запустить все контейнеры**
+3. Запустить все контейнеры
   ```bash
    docker-compose up -d
 
