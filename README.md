@@ -71,7 +71,7 @@ lab1-project/
    docker ps
   ```
 
-5. **Открыть приложение в браузере**
+5. **Открыть приложение в браузере**  
 - Главная страница: http://localhost  
 - Список заявок:	http://localhost/request_list.html  
 - API (список счетчиков): http://localhost:8000/api/meters/  
