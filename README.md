@@ -12,22 +12,22 @@ lab1-project/
 ├── .pre-commit-config.yaml
 ├── pyproject.toml
 ├── docker-compose.yml
-├── meters/ # Основное приложение
-│ ├── models.py
-│ ├── views.py
-│ ├── urls.py
-│ ├── migrations/
-│ ├── static/
-│ └── templates/
-├── water_meters_project/ # Конфигурация проекта
-│ ├── settings.py
-│ ├── urls.py
-│ └── wsgi.py
-├── minio_data/ # Данные MinIO (игнорировать в git)
-└── backups/ # SQL бэкапы
-├── back.sql
-├── backup.sql
-└── backup6.sql
+├── meters/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── migrations/
+│   ├── static/
+│   └── templates/
+├── water_meters_project/
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── minio_data/          
+└── backups/             
+    ├── back.sql
+    ├── backup.sql
+    └── backup6.sql
 
 ## Технологии
 - **Backend**: Django 4.2 (https://www.djangoproject.com/)
@@ -54,3 +54,51 @@ lab1-project/
    ```bash
    git clone <url-репозитория>
    cd project
+
+2. **Перейти в папку с backend**
+  ```bash
+   cd backend
+
+3. **Запустить все контейнеры**
+  ```bash
+   docker-compose up -d
+
+4. **Проверить, что все контейнеры запустились**
+  ```bash
+   docker ps
+
+5. **Открыть приложение в браузере**
+  ```bash
+   start http://localhost
+
+6. **Данные для входа в Adminer**
+# Открыть в браузере: http://localhost:8080
+# Система: PostgreSQL
+# Сервер: postgres
+# Пользователь: postgres2
+# Пароль: 1qaz
+# База данных: norvoter
+
+7. **Данные для входа в MinIO**
+# Открыть в браузере: http://localhost:9001
+# Логин: minioadmin
+# Пароль: minioadmin123
+
+8. **Остановка всех контейнеров**
+  ```bash
+   docker-compose down
+
+9. **Остановка с удалением всех данных (томов)**
+  ```bash
+   docker-compose down -v
+
+### Запуск без Docker (локальная разработка)
+
+1. **Создать виртуальное окружение**
+  ```bash
+   python -m venv .venv
+
+2. **Активировать виртуальное окружение**
+# Windows:
+  ```bash
+   .venv\Scripts\activate
