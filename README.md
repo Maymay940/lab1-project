@@ -4,29 +4,29 @@
 Веб-приложение для учета показаний счетчиков воды. Позволяет пользователям добавлять счетчики, вводить показания и отслеживать расход воды.
 
 ## Файловая структура проекта
-lab1-project/
-├── manage.py
-├── requirements.txt
-├── .env.example
-├── .flake8
-├── .pre-commit-config.yaml
-├── pyproject.toml
-├── docker-compose.yml
-├── meters/
-│   ├── models.py
-│   ├── views.py
-│   ├── urls.py
-│   ├── migrations/
-│   ├── static/
-│   └── templates/
-├── water_meters_project/
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── minio_data/          
-└── backups/             
-    ├── back.sql
-    ├── backup.sql
+lab1-project/  
+├── manage.py  
+├── requirements.txt  
+├── .env.example  
+├── .flake8  
+├── .pre-commit-config.yaml  
+├── pyproject.toml  
+├── docker-compose.yml  
+├── meters/  
+│   ├── models.py  
+│   ├── views.py  
+│   ├── urls.py  
+│   ├── migrations/  
+│   ├── static/  
+│   └── templates/  
+├── water_meters_project/  
+│   ├── settings.py  
+│   ├── urls.py  
+│   └── wsgi.py  
+├── minio_data/            
+└── backups/               
+    ├── back.sql  
+    ├── backup.sql  
     └── backup6.sql
 
 ## Технологии
@@ -73,21 +73,25 @@ lab1-project/
 
 5. **Открыть приложение в браузере**
   ```bash
-   start http://localhost
+   Главная страница: http://localhost
+   Список заявок:	http://localhost/request_list.html
+   API (список счетчиков): http://localhost:8000/api/meters/
+   Adminer (управление БД):	http://localhost:8080
+   MinIO Console:	http://localhost:9001
   ```
 
 6. **Данные для входа в Adminer**
-# Открыть в браузере: http://localhost:8080
-# Система: PostgreSQL
-# Сервер: postgres
-# Пользователь: postgres2
-# Пароль: 1qaz
-# База данных: norvoter
+- Открыть в браузере: http://localhost:8080
+- Система: PostgreSQL
+- Сервер: postgres
+- Пользователь: postgres2
+- Пароль: 1qaz
+- База данных: norvoter
 
 7. **Данные для входа в MinIO**
-# Открыть в браузере: http://localhost:9001
-# Логин: minioadmin
-# Пароль: minioadmin123
+- Открыть в браузере: http://localhost:9001
+- Логин: minioadmin
+- Пароль: minioadmin123
 
 8. **Остановка всех контейнеров**
   ```bash
@@ -107,12 +111,12 @@ lab1-project/
   ```
 
 2. **Активировать виртуальное окружение**
-# Windows:
+**Windows:**
   ```bash
    .venv\Scripts\activate
   ```
 
-# Linux/Mac:
+**Linux/Mac:**
   ```bash
    source .venv/bin/activate
   ```
