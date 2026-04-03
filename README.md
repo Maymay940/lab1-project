@@ -102,3 +102,22 @@ lab1-project/
 # Windows:
   ```bash
    .venv\Scripts\activate
+
+# Linux/Mac:
+   source .venv/bin/activate
+
+3. **Установить зависимости**
+  ```bash
+   pip install -r requirements.txt
+
+4. **Создать файл .env из .env.example**
+  ```bash
+   copy .env.example .env
+
+5. **Применить миграции**
+  ```bash
+   python manage.py migrate
+
+6. **Запустить сервер разработки**
+  ```bash
+   python manage.py runserver
