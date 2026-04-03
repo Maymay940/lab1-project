@@ -48,28 +48,33 @@ lab1-project/
 - Установленный Python 3.11+
 - Git
 
-### Запуск через Docker (рекомендуется)
+### Запуск через Docker 
 
 1. **Клонировать репозиторий**
    ```bash
    git clone <url-репозитория>
    cd project
+   ```
 
 2. **Перейти в папку с backend**
   ```bash
    cd backend
+  ```
 
-3. Запустить все контейнеры
+3. **Запустить все контейнеры**
   ```bash
    docker-compose up -d
+  ```
 
 4. **Проверить, что все контейнеры запустились**
   ```bash
    docker ps
+  ```
 
 5. **Открыть приложение в браузере**
   ```bash
    start http://localhost
+  ```
 
 6. **Данные для входа в Adminer**
 # Открыть в браузере: http://localhost:8080
@@ -87,37 +92,47 @@ lab1-project/
 8. **Остановка всех контейнеров**
   ```bash
    docker-compose down
+  ```
 
 9. **Остановка с удалением всех данных (томов)**
   ```bash
    docker-compose down -v
+  ```
 
 ### Запуск без Docker (локальная разработка)
 
 1. **Создать виртуальное окружение**
   ```bash
    python -m venv .venv
+  ```
 
 2. **Активировать виртуальное окружение**
 # Windows:
   ```bash
    .venv\Scripts\activate
+  ```
 
 # Linux/Mac:
+  ```bash
    source .venv/bin/activate
+  ```
 
 3. **Установить зависимости**
   ```bash
    pip install -r requirements.txt
+  ```
 
 4. **Создать файл .env из .env.example**
   ```bash
    copy .env.example .env
+  ```
 
 5. **Применить миграции**
   ```bash
    python manage.py migrate
+  ```
 
 6. **Запустить сервер разработки**
   ```bash
    python manage.py runserver
+  ```
