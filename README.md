@@ -72,13 +72,13 @@ lab1-project/
   ```
 
 5. **Открыть приложение в браузере**
-  ```bash
+
    Главная страница: http://localhost
    Список заявок:	http://localhost/request_list.html
    API (список счетчиков): http://localhost:8000/api/meters/
    Adminer (управление БД):	http://localhost:8080
    MinIO Console:	http://localhost:9001
-  ```
+  
 
 6. **Данные для входа в Adminer**
 - Открыть в браузере: http://localhost:8080
